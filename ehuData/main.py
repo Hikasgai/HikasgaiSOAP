@@ -1,4 +1,4 @@
-import urls
+from ehuData import urls
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -79,8 +79,10 @@ def obtenerHorarioAsignatura(codigoAsig, grupo, campus="GI", codigoGrado="GINFOR
             horarioGrupoAsignatura = {}
             horarioGrupoAsignatura["eventos"] = __obtenerHorarioPractico(grupo, html) + __obtenerHorarioTeorico(grupo, html)
             horarioGrupoAsignatura["IDGrupo"] = codigoAsig
-            asignatura["horarioGrupoAsignatura"] = horarioGrupoAsignatura
-            #print(json.dumps(horarioGrupoAsignatura, indent=4, sort_keys=True))
+            horarioGrupoAsignatura["horarioEspecial"] = "MON"
+            asignatura["horarioGrupoAsignatura"] = []
+            asignatura["horarioGrupoAsignatura"].append(horarioGrupoAsignatura)
+            #print(json.dumps(asignatura, indent=4, sort_keys=True))
             return asignatura
         else:
             error = {}
