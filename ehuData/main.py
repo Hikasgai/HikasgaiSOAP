@@ -72,12 +72,16 @@ def obtenerHorarioAsignatura(codigoAsig, grupo, campus="GI", codigoGrado="GINFOR
         statusCode = req.status_code
         if statusCode == 200:
             html = BeautifulSoup(req.text, "html.parser")
-
+            asignatura = {}
+            asignatura["nombreAsignatura"] = __obtenerNombreAsig(html)
+            asignatura["codigo"] = codigoAsig
+            asignatura["enlaceWebUPV"] = urlAsignatura
             horarioGrupoAsignatura = {}
             horarioGrupoAsignatura["eventos"] = __obtenerHorarioPractico(grupo, html) + __obtenerHorarioTeorico(grupo, html)
             horarioGrupoAsignatura["IDGrupo"] = codigoAsig
+            asignatura["horarioGrupoAsignatura"] = horarioGrupoAsignatura
             #print(json.dumps(horarioGrupoAsignatura, indent=4, sort_keys=True))
-            return horarioGrupoAsignatura
+            return asignatura
         else:
             error = {}
             error["message"] = "Ha ocurrido algun tipo de error"
