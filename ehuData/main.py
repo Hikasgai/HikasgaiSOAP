@@ -93,7 +93,7 @@ def obtenerHorarioAsignatura(codigoAsig, grupo, campus="GI", codigoGrado="GINFOR
             dias = __obtenerHorarioTeorico([], grupo, html)
             horario["dias"] = __obtenerHorarioPractico(dias, grupo, html)
             horario["codigo"] = codigoAsig
-            print(json.dumps(dias, indent=4, sort_keys=True))
+            print(json.dumps(horario, indent=4, sort_keys=True))
         else:
             error = {}
             error["message"] = "Ha ocurrido algun tipo de error"
