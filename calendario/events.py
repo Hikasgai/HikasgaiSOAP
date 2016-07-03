@@ -1,92 +1,63 @@
 import datetime
 from icalendar import Event, vRecur
 import json
-from datetime import datetime
+
 from dateutil.rrule import rruleset,rrulestr
 
-def __switch_dias(dia):
-    """
-    Funcion que hace de swicth porque no se les ocurrio hacerlo a los que crearon el lenguaje
-     y tengo que estar haciendolo yo aunque ahora no la uso
-    """
-    switcher = {
-        1: "lunes",
-        2: "martes",
-        3: "miercoles",
-        4: "jueves",
-        5: "viernes"
-    }
-    return switcher.get(dia, "lunes", titulo)
+from calendario import util
+from calendario import eventcreator as create
+from calendario import delete
 
-def __eliminarDias(diasExcluidos):
-    """
-        Funcion para devolver una lista con los dias de la semana excluyendo los que se pasan como parametro
-    """
-    dias = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
-    for ex in diasExcluidos:
-        dias = filter(lambda a: a != ex, dias)
-    return dias
 
-def __crearEventosHorario(data):
+
+def __crearEventosHorario(data, inicioCuatrimestre="2016/09/05 MON", inicioCuatrimestreDos="2017/01/23 THU", exclusiones=[]):
     """
         Funcion para generar los eventos que son de tipo horario
         Recibe un json cumpliendo la especificacion
     """
     lista_eventos = []
-    for dia in data["horario"]["dias"]:
-        for modulo in dia["modulo"]:
-            evento = Event()
-            horaInicio = ""#De donde saco el dia?
-            horaFin = ""#Idem
-            ultimoDia = ""#Necesito los datos para calcular el ultimo dia
-            event.add('summary', data["codigo"])
-            event.add('rrule', {'freq': 'weekly', 'duration': ultimoDia})
-            event['uid'] = str(horainicio) + '@hikasgai.com'
-            lista_eventos.append(evento)
+
+    for modulo in data:
+        semanas = modulo["rangoSemanas"].split("-")
+        gapSemanaInicio = ((int(semanas[0]) - 1) * 7) + util.__getPosDiaSemana(modulo["diaSemana"])
+        gapSemanaFin = gapSemanaInicio + ((int(semanas[1]) - int(semanas[0]) + len(exclusiones)) * 7 )
+
+        if int(semanas[0]) < 16: #En funcion de la semana toma como referencia el inicio de un cuatrimestre u otro
+            diaInicial = inicioCuatrimestre
+        else:
+            diaInicial = inicioCuatrimestreDos
+            gapSemanaInicio -= (15*7)
+
+        inicio = util.__fromOurDateToDatetime(diaInicial, modulo["horaInicio"], gapSemanaInicio)
+        fin = util.__fromOurDateToDatetime(diaInicial, modulo["horaFin"], gapSemanaInicio)
+        ultimoDia =  util.__fromOurDateToDatetime(diaInicial, modulo["horaFin"], gapSemanaFin)
+        evento = create.__crearEventoUnico(inicio, fin, modulo["tipoEvento"])
+        evento.add('rrule', {'freq': 'weekly', 'until': ultimoDia})
+        lista_eventos.append(evento)
     return lista_eventos
 
-
-def __crearEventoUnico(inicio, fin, titulo):
-    evento = Event()
-    evento.add('dtstart', inicio)
-    evento.add('dtend', fin)
-    evento.add('summary', titulo)
-    return evento
-
-
-def __crearEventosDiasSinClase(data):
-    eventos = []
-    for dia in data:
-        eventos.append(__crearEventoUnico(inicio, fin, dia["motivo"]))
-    return eventos
-
-def __crearEventosHorarioEspecial(data):
-    eventos = []
-    for periodo in data:
-        eventos.append(__crearEventoUnico(inicio, fin, periodo["motivo"]))
-    return eventos
-
-def __crearEventoIntercambio(data):
-    eventos = []
-    for intercambio in data:
-        titulo = "Dia de " + intercambio["diaPorQueSeCambia"]
-        eventos.append(__crearEventoUnico(inicio, fin, titulo))
-
-def __crearEventosDiasLectivos(data):
-
-    diaLectivo = Event()
-    inicio = data["inicioCuatrimestreUno"]
-    fin = data["finCuatrimestreUno"]
-    evento.add('dtstart', inicio)
-    evento.add('dtend', fin)
-    evento.add('summary', titulo)
 def __crearEventosCalendario(data):
     """
-        Funcion para generar los eventos de tipo calendario,
-        eventos de dias completos.
+        Funcion para crear los eventos del calendario sin tener en cuenta los dias lectivos
     """
-    eventos = []
-    eventos.append(__crearEventosDiasSinClase(data["diasSinClase"]))
-    eventos.append(__crearEventosHorarioEspecial(data["periodosHorarioEspecial"]))
-    eventos.append(__crearEventoIntercambio(data["intercambioDias"]))
+    diasSinClase = create.__crearEventosDiasSinClase(data["diasSinClase"])
+    periodosHorarioEspecial = create.__crearEventosHorarioEspecial(data["periodosHorarioEspecial"])
+    intercambioDias = create.__crearEventoIntercambio(data["intercambioDias"])
+    semanasExcluidas = create.__crearEventosSemanasExcluidas(data["semanasExcluidas"])
+    eventos = diasSinClase + periodosHorarioEspecial + intercambioDias + semanasExcluidas
+    return eventos
+
+def __crearEventosCalendarioAnual(data):
+    """
+        Funcion para generar los eventos de tipo calendario,
+        eventos de dias completos. Se tienen en cuenta los dias lectivos.
+    """
+    diasLectivos = []
+    dias = util.__eliminarDias(data["diasSemanalesNoLectivos"])
+    primerCuatrimestre = create.__crearEventosDiasLectivos(data["inicioCuatrimestreUno"], data["finCuatrimestreUno"], dias)
+    segundoCuatrimestre = create.__crearEventosDiasLectivos(data["inicioCuatrimestreDos"], data["finCuatrimestreDos"], dias)
+    diasLectivos.append(primerCuatrimestre)
+    diasLectivos.append(segundoCuatrimestre)
+    diasLectivos = delete.__suprimirFiestas(diasLectivos, data)
+    eventos = __crearEventosCalendario(data) + diasLectivos
     return eventos

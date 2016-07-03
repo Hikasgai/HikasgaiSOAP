@@ -93,6 +93,3 @@ def obtenerHorarioAsignatura(codigoAsig, grupo, campus="GI", codigoGrado="GINFOR
         error["message"] = str(e)
         print (str(e))
         return error
-
-
-obtenerHorarioAsignatura(codigoAsig="26025", grupo="16")
