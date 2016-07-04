@@ -5,7 +5,7 @@ from calendario import calendar
 from testMetodos import test_fhsa
 #test_fhsa.bateriaPruebasFHSA()
 
-#print(json.dumps(main.obtenerHorarioAsignatura(codigoAsig="26025", grupo="16"), indent=4, sort_keys=True))
+print(json.dumps(main.obtenerHorarioAsignatura(codigoAsig="26025", grupo="16"), indent=4, sort_keys=True))
 
 dataCalendar = {
             "cursoAcademico": "2016-2017",
