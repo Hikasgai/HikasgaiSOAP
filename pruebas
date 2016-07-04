@@ -1,0 +1,34 @@
+s{
+    "codigo": "26025",
+    "enlaceWebUPV": "http://www.ehu.eus/es/web/vicer.grado-innovacion/aurtengo-graduak-campus-ikastegia?p_p_id=upvehuapp_WAR_upvehuappportlet&p_p_state=normal&p_p_mode=view&p_p_col_id=column-2&p_p_col_pos=0&p_p_col_count=1&p_p_lifecycle=1&_upvehuapp_WAR_upvehuappportlet_action=redirectAction&reu=/pls/entrada/plew0040.htm_asignatura_next?p_sesion=&p_cod_idioma=CAS&p_en_portal=N&p_cod_centro=226&p_cod_plan=GINFOR20&p_anyoAcad=act&p_pestanya=3&p_menu=principal&p_cod_asig=26025&p_ciclo=X&p_curso=4&p_vengo_de=asig_cursos",
+    "horarioGrupoAsignatura": [
+        {
+            "IDGrupo": "26025",
+            "eventos": [
+                {
+                    "diaSemana": "THU",
+                    "horaFin": "17:00",
+                    "horaInicio": "15:40",
+                    "rangoSemanas": "1-15",
+                    "tipoEvento": "GA"
+                },
+                {
+                    "diaSemana": "MON",
+                    "horaFin": "19:15",
+                    "horaInicio": "17:15",
+                    "rangoSemanas": "1-15",
+                    "tipoEvento": "M"
+                },
+                {
+                    "diaSemana": "THU",
+                    "horaFin": "15:40",
+                    "horaInicio": "15:00",
+                    "rangoSemanas": "1-15",
+                    "tipoEvento": "M"
+                }
+            ],
+            "horarioEspecial": "MON"
+        }
+    ],
+    "nombreAsignatura": "\u00a0Sistemas de Gesti\u00f3n de Seguridad de Sistemas de Informaci\u00f3n"
+}
