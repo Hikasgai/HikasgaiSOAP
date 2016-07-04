@@ -17,7 +17,7 @@ def __crearEventosHorario(data, inicioCuatrimestre="2016/09/05 MON", inicioCuatr
     """
     lista_eventos = []
 
-    for modulo in data:
+    for modulo in data["eventos"]:
         semanas = modulo["rangoSemanas"].split("-")
         gapSemanaInicio = ((int(semanas[0]) - 1) * 7) + util.__getPosDiaSemana(modulo["diaSemana"])
         gapSemanaFin = gapSemanaInicio + ((int(semanas[1]) - int(semanas[0]) + len(exclusiones)) * 7 )
@@ -31,7 +31,8 @@ def __crearEventosHorario(data, inicioCuatrimestre="2016/09/05 MON", inicioCuatr
         inicio = util.__fromOurDateToDatetime(diaInicial, modulo["horaInicio"], gapSemanaInicio)
         fin = util.__fromOurDateToDatetime(diaInicial, modulo["horaFin"], gapSemanaInicio)
         ultimoDia =  util.__fromOurDateToDatetime(diaInicial, modulo["horaFin"], gapSemanaFin)
-        evento = create.__crearEventoUnico(inicio, fin, modulo["tipoEvento"])
+        evento = create.__crearEventoUnico(inicio, fin, data["nombreAsignatura"])
+        evento.add('description', modulo["tipoEvento"])
         evento.add('rrule', {'freq': 'weekly', 'until': ultimoDia})
         lista_eventos.append(evento)
     return lista_eventos

@@ -11,6 +11,7 @@ def __crearEventoUnico(inicio, fin, titulo):
     if fin is not None:
         evento.add('dtend', fin)
     evento.add('summary', titulo)
+    evento.add('description', titulo)
     evento['uid'] = str(inicio).replace(" ", "") + '@hikasgai.com'
     return evento
 

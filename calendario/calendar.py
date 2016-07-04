@@ -21,7 +21,9 @@ def crearCalendario(data):
 def crearCalendarioCompleto(data, calendario):
     cal = Calendar()
     #TODO: Gestionar mas de una asignatura, meterlo un for basicamente
-    eventos = events.__crearEventosHorario(data, inicioCuatrimestre=calendario["inicioCuatrimestreUno"], inicioCuatrimestreDos=calendario["inicioCuatrimestreDos"], exclusiones=calendario["semanasExcluidas"])
+    eventos = []
+    for asig in data:
+        eventos += events.__crearEventosHorario(asig, inicioCuatrimestre=calendario["inicioCuatrimestreUno"], inicioCuatrimestreDos=calendario["inicioCuatrimestreDos"], exclusiones=calendario["semanasExcluidas"])
     suprimir.__suprimirFiestas(eventos, calendario)
     eventos += events.__crearEventosCalendario(calendario)
     for evento in eventos:
@@ -39,7 +41,10 @@ def crearCalendarioAsignatura(data, fiestas):
         Funcion para crear el horario de una asignatura libre de fiestas y dias especiales
     """
     cal = Calendar()
-    eventos = events.__crearEventosHorario(data)
+    eventos = []
+    for asig in data:
+        eventos += events.__crearEventosHorario(asig)
+
     suprimir.__suprimirFiestas(eventos, fiestas)
     for evento in eventos:
         cal.add_component(evento)
@@ -54,7 +59,9 @@ def crearCalendarioAsignatura(data, fiestas):
 def crearHorario(data):
     try:
         cal = Calendar()
-        eventos = events.__crearEventosHorario(data)
+        eventos = []
+        for asig in data:
+            eventos += events.__crearEventosHorario(asig)
         for evento in eventos:
             cal.add_component(evento)
         cal_content = cal.to_ical()
