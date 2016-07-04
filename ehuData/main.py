@@ -1,4 +1,4 @@
-import urls
+from ehuData import urls
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -72,12 +72,18 @@ def obtenerHorarioAsignatura(codigoAsig, grupo, campus="GI", codigoGrado="GINFOR
         statusCode = req.status_code
         if statusCode == 200:
             html = BeautifulSoup(req.text, "html.parser")
-
+            asignatura = {}
+            asignatura["nombreAsignatura"] = __obtenerNombreAsig(html)
+            asignatura["codigo"] = codigoAsig
+            asignatura["enlaceWebUPV"] = urlAsignatura
             horarioGrupoAsignatura = {}
             horarioGrupoAsignatura["eventos"] = __obtenerHorarioPractico(grupo, html) + __obtenerHorarioTeorico(grupo, html)
             horarioGrupoAsignatura["IDGrupo"] = codigoAsig
-            #print(json.dumps(horarioGrupoAsignatura, indent=4, sort_keys=True))
-            return horarioGrupoAsignatura
+            horarioGrupoAsignatura["horarioEspecial"] = "MON"
+            asignatura["horarioGrupoAsignatura"] = []
+            asignatura["horarioGrupoAsignatura"].append(horarioGrupoAsignatura)
+            #print(json.dumps(asignatura, indent=4, sort_keys=True))
+            return asignatura
         else:
             error = {}
             error["message"] = "Ha ocurrido algun tipo de error"
@@ -87,6 +93,3 @@ def obtenerHorarioAsignatura(codigoAsig, grupo, campus="GI", codigoGrado="GINFOR
         error["message"] = str(e)
         print (str(e))
         return error
-
-
-obtenerHorarioAsignatura(codigoAsig="26025", grupo="16")

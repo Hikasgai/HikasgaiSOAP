@@ -16,9 +16,7 @@ def bateriaPruebasFHSA():
 def testFSHA(horarioAsig):
 
     resultadoPositivo = False
-
     comprobarCodigo(horarioAsig["codigo"])
-
     for horarioGrupo in horarioAsig["horarioGrupoAsignatura"]:
         comprobarIDGrupo(horarioGrupo["IDGrupo"])
         comprobarDiaEnumerado(horarioGrupo["horarioEspecial"])
@@ -26,9 +24,9 @@ def testFSHA(horarioAsig):
         for evento in horarioGrupo["eventos"]:
             comprobarTipoEvento(evento["tipoEvento"])
             comprobarDiaEnumerado(evento["diaSemana"])
-            comprobarRangoSemanas(modulo["rangoSemanas"])
-            comprobarHora(modulo["horaInicio"])
-            comprobarHora(modulo["horaFin"])
+            comprobarRangoSemanas(evento["rangoSemanas"])
+            comprobarHora(evento["horaInicio"])
+            comprobarHora(evento["horaFin"])
     '''
 
     for dia in horarioAsig["dias"]:
@@ -42,13 +40,13 @@ def testFSHA(horarioAsig):
     return resultadoPositivo
 '''
 def comprobarCodigo(cod):
-    if len(cod == 2):
+    if len(cod) == 2:
         print ("Formato codigo OK")
     else:
         print ("Formato codigo no tiene longitud 2 ERROR  valor variable =" + str(cod))
 
 def comprobarIDGrupo(ID):
-        if len(ID == 5):
+        if len(ID)  == 5:
             print ("Formato IDGrupo OK")
         else:
             print ("Formato IDGrupo no tiene longitud 5 ERROR valor variable =" + str(ID))
@@ -64,7 +62,7 @@ def comprobarRangoSemanas(rangoSemanas):
     return ok
 
 def comprobarHora(hora):
-    print ("Analizando hora" + srt(hora))
+    print ("Analizando hora" + str(hora))
     patron = re.compile("^\d{2}:\d{2}$")
     ok = patron.match(hora)
     if not ok:
@@ -82,5 +80,3 @@ def comprobarTipoEvento(tipo):
         print ("El formato del tipoEvento OK")
     else:
         print ("El formato tipoEvento es incorrecto ERROR, el valor tiene que ser M,S,GA,GL,GO,GCL,TA,TI,GCA y es" +srt(tipo))
-
-bateriaPruebasFHSA()
