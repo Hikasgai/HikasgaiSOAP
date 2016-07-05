@@ -20,3 +20,4 @@ __copyright__ = "Copyright (c) 2016 Alain Barrero"
 __all__ = ['lib_ehu']
 
 from .asginaturasGrado import obtenerAsignaturasGradoInformatica
+from .gruposAsignatura import obtenerGruposAsignaturaInformatica
