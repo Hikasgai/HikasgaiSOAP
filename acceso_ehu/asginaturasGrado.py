@@ -16,6 +16,9 @@ def obtenerAsignaturas(url):
     asignaturas = soup.findAll('a', {'class':'asig'})
     return asignaturas
 
+def obtenerCursoAsignatura(asignatura):
+    return asignatura['href'].split('p_curso=')[1][0:1]
+
 def obtenerNombreAsignatura(asignatura):
     return asignatura.getText()
 
@@ -36,6 +39,7 @@ def crearJsonAsignaturas(idioma, codCentro, codPlan):
         asignatura['nombreAsignatura'] = obtenerNombreAsignatura(asig)
         asignatura['codigo'] = obtenerCodigoAsignatura(asig)
         asignatura['enlaceWebUPV'] = obtenerEnalceAsignatura(asig)
+        asignatura['curso'] = obtenerCursoAsignatura(asig)
         asignatura['horarioGrupoAsignatura'] = []
         asignaturas.append(asignatura)
     lista_asignaturas = {}
